@@ -1,9 +1,7 @@
 import React from "react";
-import Markdown from "react-markdown";
 import { useNavigate, useParams } from "react-router";
 import { getNote } from "../api/notes";
 import { css } from "@emotion/react";
-import { Entities, EntityComponent } from "../features/text";
 
 const authorCss = css`
 font-size: 14px;
@@ -70,7 +68,6 @@ const NotePage: React.FC = () => {
   const navigate = useNavigate();
   const [author, setAuthor] = React.useState("Загрузка");
   const [body, setBody] = React.useState("Загрузка");
-  const [_body, _setBody] = React.useState<Array<any>>([]);
   const [name, setName] = React.useState("Загрузка");
   const [subtitle, setSubTitle] = React.useState("Загрузка");
 
@@ -86,7 +83,6 @@ const NotePage: React.FC = () => {
           setBody(note.body);
           setName(note.title);
           setSubTitle(note.subtitle);
-          _setBody(JSON.parse(note.body));
         }
       })();
     }
@@ -98,18 +94,17 @@ const NotePage: React.FC = () => {
         <div css={btn}>вход</div>
       </div>
       <div css={cont}>
-        <h1 css={articleName}>{name}</h1>
-        <h2 css={articleSubtitle}>{subtitle}</h2>
+        <div>
+          <h1 css={articleName}>{name}</h1>
+          <h2 css={articleSubtitle}>{subtitle}</h2>
+        </div>
+        <div css=></div>
       </div>
       <div css={cont}>
         <p css={authorCss}>{author} | время</p>
       </div>
       <div css={cont}>
-        <span>
-          {_body.map((i) => (
-            <EntityComponent entity={Entities[i.type]} meta={i} />
-          ))}
-        </span>
+        <div dangerouslySetInnerHTML={{__html: body}}></div>
       </div>
     </div>
   );

@@ -10,6 +10,8 @@ import {
 import { createAnonymousNote } from "../api/notes";
 import { useNavigate } from "react-router";
 import TextEditor, { createTextEditor } from "../components/TextEditor";
+import ReactQuill from "react-quill";
+import 'react-quill/dist/quill.snow.css';
 
 const Playground: React.FC = () => {
   const name = useInput("Название");
@@ -102,7 +104,8 @@ const Playground: React.FC = () => {
         </button>
       </div>
 
-      <TextEditor {...t}></TextEditor>
+      {/* <TextEditor {...t}></TextEditor> */}
+      <ReactQuill value={"# chlen"} theme="snow"></ReactQuill>
     </>
   );
 };

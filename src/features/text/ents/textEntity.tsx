@@ -6,7 +6,7 @@ interface TextEntityMeta {
 }
 const TextEntity: Entity<TextEntityMeta> = {
   type: "TEXT",
-  render(meta, bus) {
+  render(meta) {
 
     return <span>{meta.text}</span>;
   },

@@ -25,8 +25,8 @@ const TextEditor: React.FC<
   }
 > = ({ data, setData, tool, setTool, cursor, setCursor }) => {
   const onKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (ev) => {
-    if (data.length === 0) setCursor(0)
- 
+    if (data.length === 0) setCursor(0);
+
     if (ev.key === " ") {
       setData([
         ...data,
@@ -95,11 +95,13 @@ const TextEditor: React.FC<
       setData(nData);
     }
   };
+ 
   return (
     <div
       style={{
         border: "1px solid black",
         padding: 10,
+        userSelect: "none"
       }}
       onKeyDown={onKeyDown}
       autoFocus={true}
