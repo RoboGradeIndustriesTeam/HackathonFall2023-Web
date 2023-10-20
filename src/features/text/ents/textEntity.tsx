@@ -1,3 +1,4 @@
+import React from "react";
 import { Entity } from "..";
 
 interface TextEntityMeta {
@@ -5,7 +6,8 @@ interface TextEntityMeta {
 }
 const TextEntity: Entity<TextEntityMeta> = {
   type: "TEXT",
-  render(meta) {
+  render(meta, bus) {
+
     return <span>{meta.text}</span>;
   },
   asMarkdown(meta) {

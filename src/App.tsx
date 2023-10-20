@@ -7,6 +7,8 @@ import LoginPage from "./pages/LoginPage";
 import NotePage from "./pages/NotePage";
 import ErrorPage from "./pages/ErrorPage";
 import CreateNotePage from "./pages/CreateNotePage";
+import Playground from "./pages/Playground";
+import "./style.css"
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/create",
     element: <CreateNotePage></CreateNotePage>
+  },
+  {
+    path: "/playground",
+    element: <Playground></Playground>
   },
   {
     path: "/error",

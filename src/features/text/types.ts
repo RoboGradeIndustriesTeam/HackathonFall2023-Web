@@ -1,3 +1,5 @@
+import { EventEmitter } from "events";
+
 export type EntityType = 
   "TEXT" |
   "BOLD_TEXT" |

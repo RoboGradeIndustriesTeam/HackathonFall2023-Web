@@ -1,4 +1,9 @@
 import { Entity } from "..";
+import {css} from "@emotion/react"
+
+const imgArticle = css`
+width: 10%;
+`
 
 interface ImageEntityMeta {
   src: string;
@@ -6,7 +11,7 @@ interface ImageEntityMeta {
 const ImageEntity: Entity<ImageEntityMeta> = {
   type: "IMAGE",
   render(meta) {
-    return <img src={meta.src}/>;
+    return <img css={imgArticle} className={"img"} src={meta.src}/>;
   },
 
   asMarkdown(meta) {

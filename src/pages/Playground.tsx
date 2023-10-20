@@ -8,10 +8,10 @@ import {
   ToolType,
 } from "../features/text";
 import { createAnonymousNote } from "../api/notes";
-import { json, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import TextEditor, { createTextEditor } from "../components/TextEditor";
 
-const CreateNotePage: React.FC = () => {
+const Playground: React.FC = () => {
   const name = useInput("Название");
   const subname = useInput("Суб-название");
   const linkHref = useInput("https://google.com");
@@ -90,7 +90,7 @@ const CreateNotePage: React.FC = () => {
             const note = await createAnonymousNote({
               name: name.value,
               subtitle: subname.value,
-              body: JSON.stringify(data)
+              body: entityToMarkdown(data.map((i) => [Entities[i.type], i])),
             });
 
             if (!("message" in note)) {
@@ -107,4 +107,4 @@ const CreateNotePage: React.FC = () => {
   );
 };
 
-export default CreateNotePage;
+export default Playground;

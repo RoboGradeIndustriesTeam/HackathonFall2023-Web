@@ -31,6 +31,7 @@ export interface ApiError {
 export interface CreateNoteDto {
   name: string;
   body: string;
+  subtitle: string;
 }
 
 export interface NoteDto {
@@ -40,4 +41,5 @@ export interface NoteDto {
   slug: string;
   authorName: string;
   author: UserDto | null;
+  subtitle: string;
 }
