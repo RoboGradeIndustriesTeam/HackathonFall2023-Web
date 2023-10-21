@@ -7,47 +7,69 @@ import LoginPage from "./pages/LoginPage";
 import NotePage from "./pages/NotePage";
 import ErrorPage from "./pages/ErrorPage";
 import CreateNotePage from "./pages/CreateNotePage";
-import Playground from "./pages/Playground";
-import "./style.css"
+import "./style.css";
+import RegisterPage from "./pages/RegisterPage";
+import ProfilePage from "./pages/ProfilePage";
+import UpdateNotePage from "./pages/UpdateNote";
+import { defaultTheme, ThemeContext } from "./features/themeing";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div>Example Note</div>,
+    element: <CreateNotePage></CreateNotePage>,
   },
   {
     path: "/login",
-    element: <LoginPage></LoginPage>
+    element: <LoginPage></LoginPage>,
+  },
+  {
+    path: "/register",
+    element: <RegisterPage></RegisterPage>,
+  },
+  {
+    path: "/profile",
+    element: <ProfilePage></ProfilePage>,
+  },
+  {
+    path: "/profile/:username",
+    element: <ProfilePage></ProfilePage>,
   },
   {
     path: "/create",
-    element: <CreateNotePage></CreateNotePage>
+    element: <CreateNotePage></CreateNotePage>,
   },
   {
-    path: "/playground",
-    element: <Playground></Playground>
+    path: "/edit/:slug",
+    element: <UpdateNotePage></UpdateNotePage>,
   },
+
   {
     path: "/error",
-    element: <ErrorPage></ErrorPage>
+    element: <ErrorPage></ErrorPage>,
   },
   {
     path: "/:slug",
-    element: <NotePage></NotePage>
-  }
+    element: <NotePage></NotePage>,
+  },
 ]);
 const App: React.FC = () => {
   const [accessToken, setAccessToken] = React.useState<string | null>(null);
   const [isAuthenticaed, setIsAuthenticaed] = React.useState<boolean>(false);
   const [user, setUser] = React.useState<UserDto | null>(null);
-  async function setAccessToken_(access_token: string ) {
+
+  const theme = React.useContext(ThemeContext);
+  const windowRef = React.useRef<Window>(window);
+
+  async function setAccessToken_(access_token: string) {
     const user = await getUser(access_token);
     if (user && !("message" in user)) {
       setAccessToken(access_token);
       setIsAuthenticaed(true);
       setUser(user);
-      console.log(`Successfully authenticated as ${user.username} (${user._id})`)
-      localStorage.setItem("access_token", access_token)
+      console.log(
+        `Successfully authenticated as ${user.username} (${user._id})`,
+      );
+      localStorage.setItem("access_token", access_token);
     }
   }
   React.useEffect(() => {
@@ -57,6 +79,11 @@ const App: React.FC = () => {
         await setAccessToken_(access_token);
       })();
     }
+
+    if (windowRef.current) {
+      windowRef.current.document.body.style.background = theme.background;
+      windowRef.current.document.body.style.color = theme.text;
+    }
   }, []);
   return (
     <TokenContenxt.Provider
@@ -64,7 +91,7 @@ const App: React.FC = () => {
         access_token: accessToken,
         is_authenticated: isAuthenticaed,
         user: user,
-        setAccessToken: setAccessToken_
+        setAccessToken: setAccessToken_,
       }}
     >
       <RouterProvider router={router} />

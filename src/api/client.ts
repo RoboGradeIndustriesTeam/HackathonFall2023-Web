@@ -1,4 +1,5 @@
 import axios from "axios";
+import generateBrowserFingerprint from "./browser-fingerprint";
 const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:3000"
 
 export const client = axios.create({
@@ -6,4 +7,7 @@ export const client = axios.create({
     validateStatus(status) {
         return true;
     },
+    headers: {
+        "X-Browser-Fingerprint": generateBrowserFingerprint()
+    }
 })

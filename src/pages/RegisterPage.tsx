@@ -1,7 +1,7 @@
 import React, {} from "react";
 import { useAuth } from "../features/tokenContext";
 import { useNavigate } from "react-router";
-import { login as apiLogin } from "../api/user";
+import { register as apiRegister } from "../api/user";
 import useInput from "../features/useInput";
 import { css } from "@emotion/react";
 
@@ -68,7 +68,7 @@ transition: opacity .3s;
 max-width: 372px;
 `
 
-const LoginPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const auth = useAuth();
 
@@ -77,27 +77,29 @@ const LoginPage: React.FC = () => {
   if (auth.is_authenticated) navigate("/");
   const onSubmit: React.FormEventHandler<HTMLFormElement> = async (ev) => {
     ev.preventDefault();
-    const resp = await apiLogin({
-      username: login.value,
-      password: password.value,
+    const resp = await apiRegister({
+        username: login.value,
+        password: password.value
     });
     if ("message" in resp) {
-      // handle error
-    } else {
-      await auth.setAccessToken(resp.access_token);
-      if (auth.is_authenticated) {
-        navigate("/profile");
-      } else {
         // handle error
-      }
+    }
+    else {
+        await auth.setAccessToken(resp.access_token);
+        if (auth.is_authenticated) {
+            navigate("/profile")
+        }
+        else {
+            // handle error
+        }
     }
   };
   return (
     <div css={[page]}>
       <form css={form} onSubmit={onSubmit}>
         <div css={cont}>
-          <h1 css={h1}>вход в ученую запись</h1>
-          <h2 css={h2}>войдите что бы расширить функционал сервиса</h2>
+          <h1 css={h1}>регистрация</h1>
+          <h2 css={h2}>зарегестрируйтесь что бы расширить функционал сервиса</h2>
         </div>
         <input css={[cont, input]} placeholder="логин" type="text" {...login} />
         <input
@@ -106,12 +108,12 @@ const LoginPage: React.FC = () => {
           type="password"
           {...password}
         />
-        <input css={[cont, loginInput]} type="submit" value="войти" />
-        <input css={[cont, regInput]} onClick={() => navigate("/register")} value="или регистрация" />
-
+        <input css={[cont, loginInput]} type="submit" value="регистрация" />
+        <input css={[cont, regInput]} onClick={() => navigate("/login")} value="или войти" />
       </form>
     </div>
+    
   );
 };
 
-export default LoginPage;
+export default RegisterPage

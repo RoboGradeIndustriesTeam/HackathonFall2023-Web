@@ -29,3 +29,10 @@ export async function getUser(access_token: string): Promise<UserDto | ApiError>
 
     return resp.data
 }
+
+export async function getUserByName(username: string): Promise<UserDto | ApiError> {
+    /* /users/:username */
+    const resp = await client.get<UserDto | ApiError>(`/users/${username}`);
+
+    return resp.data
+}

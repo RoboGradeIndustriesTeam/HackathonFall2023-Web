@@ -34,6 +34,11 @@ export interface CreateNoteDto {
   subtitle: string;
 }
 
+
+export interface CreateAnonymousNoteDto extends CreateNoteDto {
+ authorName: string;
+}
+
 export interface NoteDto {
   _id: string;
   title: string;
@@ -42,4 +47,6 @@ export interface NoteDto {
   authorName: string;
   author: UserDto | null;
   subtitle: string;
+  createdAt: number;
+  views: number;
 }
