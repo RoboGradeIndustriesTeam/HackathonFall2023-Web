@@ -9,7 +9,12 @@ img {
     max-width: 100%;
 }
 
-h1, h2, h3, p, ol, ul {
+h1,
+h2,
+h3,
+p,
+ol,
+ul {
     margin: 0;
 }
 
@@ -24,7 +29,7 @@ h1, h2, h3, p, ol, ul {
 
 .ql-toolbar.ql-snow {
     border: 0 !important;
-    border-bottom: 1px #939393 solid !important; 
+    border-bottom: 1px #939393 solid !important;
 }
 
 .ql-container {
@@ -34,4 +39,17 @@ h1, h2, h3, p, ol, ul {
 
 .ql-container.ql-snow {
     border: 0 !important;
+}
+
+/* .show {
+    -webkit-animation: display .2s linear forwards;
+    animation: display .2s linear forwards;
+} */
+
+* {
+    transition: background-color 0.2s ease-in-out;
+}
+
+body {
+    transition: background-color 0.2s ease-in-out;
 }

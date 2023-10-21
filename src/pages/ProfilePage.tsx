@@ -9,17 +9,19 @@ import {
   articleSubtitle,
   authorCss,
   btn,
+  btnCont,
   cont,
-  contentName,
   jcSb,
   page,
   w100,
-  btnCont,
 } from "../styles/globals";
-import MainHeader from "../components/header";
+import { css } from "@emotion/react";
+import NavigationBar from "../components/Navigation";
+import moment from "moment";
+import Container from "../components/Container";
 
 const contentName = css`
-max-width: calc(100% - 90px);
+max-width: calc(100% - 110px);
 `;
 
 const ProfilePage: React.FC = () => {
@@ -61,8 +63,8 @@ const ProfilePage: React.FC = () => {
   }, [auth.is_authenticated]);
   return (
     <div css={page}>
-      <MainHeader />
-      <div css={[cont, jcSb]}>
+      <NavigationBar />
+      <Container css={[cont, jcSb]}>
         <div css={[contentName, w100]}>
           <h1 css={articleName}>{username}</h1>
           <h2 css={articleSubtitle}>статьи автора</h2>
@@ -70,11 +72,13 @@ const ProfilePage: React.FC = () => {
         <div>
           <div css={btn} onClick={() => navigate(-1)}>вернуться назад</div>
         </div>
-      </div>
+      </Container>
       {notes.map((i) => (
-        <div onClick={() => navigate(`/${i.slug}`)} css={[cont, btnCont]}>
-          <p css={authorCss}>{i.title}</p>
-        </div>
+        <Container onClick={() => navigate(`/${i.slug}`)} css={[cont, btnCont]}>
+          <p css={authorCss}>
+            {i.title} | {i.views} просмотров | {moment(i.createdAt).fromNow()}
+          </p>
+        </Container>
       ))}
     </div>
   );

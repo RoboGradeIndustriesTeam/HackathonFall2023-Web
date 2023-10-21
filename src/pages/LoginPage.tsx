@@ -4,6 +4,21 @@ import { useNavigate } from "react-router";
 import { login as apiLogin } from "../api/user";
 import useInput from "../features/useInput";
 import { page, form, cont, input, h1, h2, loginInput, regInput } from "../styles/login";
+import Container from "../components/Container";
+import Input from "../components/Input";
+import { css } from "@emotion/react";
+
+const loginVk = css`
+color: white;
+background: #0077FF;
+
+padding: 18px 14px; 
+margin-bottom: 15px;
+border: 0;
+text-align: left;
+border-radius: 5px;
+width: 100%;
+`
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -36,16 +51,18 @@ const LoginPage: React.FC = () => {
           <h1 css={h1}>вход в ученую запись</h1>
           <h2 css={h2}>войдите что бы расширить функционал сервиса</h2>
         </div>
-        <input css={[cont, input]} placeholder="логин" type="text" {...login} />
-        <input
+        <Input css={[cont, input]} placeholder="логин" type="text" {...login} />
+        <Input
           css={[cont, input]}
           placeholder="пароль"
           type="password"
           {...password}
         />
-        <input css={[cont, loginInput]} type="submit" value="войти" />
-        <input css={[cont, regInput]} onClick={() => navigate("/register")} value="или регистрация" />
-
+        <Input css={[loginInput]} type="submit" value="войти" />
+        <Input css={[regInput]} onClick={() => navigate("/register")} value="или регистрация" />
+        <button css={[regInput, loginVk]} onClick={() => {
+          window.location.href = `${import.meta.env.VITE_APP_URL || "http://127.0.0.1:3000"}/auth/oauth/vk?redirect=${location.origin + "/oauthRedirect"}`
+        }}>вк</button>
       </form>
     </div>
   );

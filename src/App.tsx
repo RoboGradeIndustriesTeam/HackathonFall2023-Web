@@ -11,12 +11,14 @@ import "./style.css";
 import RegisterPage from "./pages/RegisterPage";
 import ProfilePage from "./pages/ProfilePage";
 import UpdateNotePage from "./pages/UpdateNote";
-import { defaultTheme, ThemeContext } from "./features/themeing";
+import { ITheme, ThemeContext, THEMES } from "./features/theming";
+import OauthRedirectPage from "./pages/OauthRedirectPage";
 
+// TODO: Lazy Loading
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <CreateNotePage></CreateNotePage>,
+    element: <CreateNotePage></CreateNotePage>
   },
   {
     path: "/login",
@@ -51,13 +53,17 @@ const router = createBrowserRouter([
     path: "/:slug",
     element: <NotePage></NotePage>,
   },
+  {
+    path: "/oauthRedirect",
+    element: <OauthRedirectPage/>
+  }
 ]);
 const App: React.FC = () => {
   const [accessToken, setAccessToken] = React.useState<string | null>(null);
   const [isAuthenticaed, setIsAuthenticaed] = React.useState<boolean>(false);
   const [user, setUser] = React.useState<UserDto | null>(null);
 
-  const theme = React.useContext(ThemeContext);
+  const [theme, setTheme] = React.useState<ITheme>(THEMES.default.theme);
   const windowRef = React.useRef<Window>(window);
 
   async function setAccessToken_(access_token: string) {
@@ -80,11 +86,14 @@ const App: React.FC = () => {
       })();
     }
 
+    
+  }, []);
+  React.useEffect(() => {
     if (windowRef.current) {
       windowRef.current.document.body.style.background = theme.background;
       windowRef.current.document.body.style.color = theme.text;
     }
-  }, []);
+  }, [theme])
   return (
     <TokenContenxt.Provider
       value={{
@@ -94,7 +103,15 @@ const App: React.FC = () => {
         setAccessToken: setAccessToken_,
       }}
     >
+      <ThemeContext.Provider value={{
+        theme,
+        setTheme(theme) {
+          setTheme(theme)
+        },
+      }}>
       <RouterProvider router={router} />
+
+      </ThemeContext.Provider>
     </TokenContenxt.Provider>
   );
 };

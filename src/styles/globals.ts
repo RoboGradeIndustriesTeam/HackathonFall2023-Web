@@ -24,6 +24,11 @@ padding: 14px 18px;
 width: 100%;
 max-width: 1000px;
 margin-bottom: 15px;
+
+@media (max-width: 400px) {
+  border-radius: 0px;
+  padding: 14px 0px;
+}
 `;
 
 export const articleName = css`
@@ -111,4 +116,22 @@ opacity: 1;
 &:hover {
     opacity: .6;
 }
+`;
+
+export const contModal = css`
+width: 100%;
+max-width: 415px;
+`;
+export const dialogStyle = css`
+&::backdrop {
+  background: rgba(0, 0, 0, 0.25); 
+  backdrop-filter: blur(4px);
+}
+&:focus-visible {
+  outline: 0;
+}
+border: none;
+background: 0;
+width: 100%;
+max-width: 451px;
 `;

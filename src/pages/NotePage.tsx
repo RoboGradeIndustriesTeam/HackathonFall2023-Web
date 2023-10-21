@@ -2,11 +2,12 @@ import React from "react";
 import { useNavigate, useParams } from "react-router";
 import { getNote } from "../api/notes";
 import { css } from "@emotion/react";
-import moment from "moment";  
+import moment from "moment";
 import { QRCode } from "react-qrcode";
+import { create, toDataURL } from "qrcode";
 import { UserDto } from "../api/types";
 import { useAuth } from "../features/tokenContext";
-moment.locale("ru")
+moment.locale("ru");
 import {
   articleName,
   articleSubtitle,
@@ -14,30 +15,17 @@ import {
   btn,
   cont,
   contentName,
+  contLinkdBottom,
+  contLinkdTop,
+  contModal,
+  dialogStyle,
   jcSb,
   page,
-  contLinkdBottom,
-  contLinkdTop
 } from "../styles/globals";
-import MainHeader from "../components/header";
+import NavigationBar from "../components/Navigation";
+import { ThemeContext, THEMES } from "../features/theming";
+import Container from "../components/Container";
 
-const contModal = css`
-width: 100%;
-max-width: 415px;
-`;
-const dialogStyle = css`
-&::backdrop {
-  background: rgba(0, 0, 0, 0.25); 
-  backdrop-filter: blur(4px);
-}
-&:focus-visible {
-  outline: 0;
-}
-border: none;
-background: 0;
-width: 100%;
-max-width: 451px;
-`;
 const h5 = css`
 font-size: 16px;
 font-weight: 800;
@@ -68,9 +56,12 @@ const NotePage: React.FC = () => {
   const [name, setName] = React.useState("Загрузка");
   const [subtitle, setSubTitle] = React.useState("Загрузка");
   const [createdAt, setCreatedAt] = React.useState(Date.now());
-  const [shareDialog, setShareDialog] = React.useState<boolean>(false);
   const [views, setViews] = React.useState<number>(0);
-  const dialogRef = React.useRef<HTMLDialogElement>(null);
+  const [shareDialog, setShareDialog] = React.useState<boolean>(false);
+  const [burnable, setBurnable] = React.useState<boolean>(false);
+  const shareDialogRef = React.useRef<HTMLDialogElement>(null);
+  const curTheme = React.useContext(ThemeContext);
+
   const auth = useAuth();
   React.useEffect(() => {
     if (!slug) navigate("/");
@@ -87,49 +78,77 @@ const NotePage: React.FC = () => {
           setCreatedAt(note.createdAt);
           setAuthor_(note.author);
           setViews(note.views);
+          setBurnable(note.burnable)
+          curTheme.setTheme((THEMES[note.theme] || THEMES.default_).theme);
         }
       })();
     }
+    return () => curTheme.setTheme(THEMES.default.theme);
   }, []);
   React.useEffect(() => {
     if (shareDialog) {
-      dialogRef.current?.showModal();
+      shareDialogRef.current?.showModal();
     } else {
-      dialogRef.current?.close();
+      shareDialogRef.current?.close();
     }
   }, [shareDialog]);
+
   return (
     <div css={[page]}>
-      <dialog ref={dialogRef} css={dialogStyle}>
-        <div css={[cont, contModal]}>
+      <dialog ref={shareDialogRef} css={dialogStyle}>
+        <Container css={[cont, contModal]}>
           <h1 css={articleName}>ссылка на статью</h1>
           <h2 css={articleSubtitle}>можете поделиться ей</h2>
-        </div>
-        <div css={[cont, contModal, contLinkdTop]}>
+        </Container>
+        
+        <Container css={[cont, contModal, contLinkdTop]}>
           <input
             css={linkI}
             placeholder={""}
             value={location.toString()}
             readOnly
           />
-        </div>
-        <div css={[cont, contModal, contLinkdBottom]}>
-          <div css={btn}>скопировать</div>
-        </div>
-        <div css={[cont, contModal, contLinkdTop]}>
+        </Container>
+        <Container css={[cont, contModal, contLinkdBottom]}>
+          <div
+            css={btn}
+            onClick={() => {
+              navigator.clipboard.writeText(location.href.toString());
+            }}
+          >
+            скопировать
+          </div>
+        </Container>
+        <Container css={[cont, contModal, contLinkdTop]}>
           <h1 css={h5}>qr-код на статью</h1>
           <QRCode css={qrCode} value={location.href.toString()}></QRCode>
-        </div>
-        <div css={[cont, contModal, contLinkdBottom]}>
-          <div css={btn}>скачать</div>
-        </div>
-        <div css={[cont, contModal]}>
+        </Container>
+        <Container css={[cont, contModal, contLinkdBottom]}>
+          <div
+            css={btn}
+            onClick={async () => {
+              let pom = document.createElement("a");
+              pom.setAttribute(
+                "href",
+                await toDataURL(location.href.toString()),
+              );
+              pom.setAttribute("download", slug + "-qr.png");
+              pom.style.display = "none";
+              document.body.appendChild(pom);
+              pom.click();
+              document.body.removeChild(pom);
+            }}
+          >
+            скачать
+          </div>
+        </Container>
+        <Container css={[cont, contModal]}>
           <div css={btn} onClick={() => setShareDialog(false)}>закрыть</div>
-        </div>
+        </Container>
       </dialog>
 
-      <MainHeader></MainHeader>
-      <div css={[cont, jcSb]}>
+      <NavigationBar></NavigationBar>
+      <Container css={[cont, jcSb]}>
         <div css={contentName}>
           <h1 css={articleName}>{name}</h1>
           <h2 css={articleSubtitle}>{subtitle}</h2>
@@ -137,8 +156,11 @@ const NotePage: React.FC = () => {
         <div>
           <div css={btn} onClick={() => setShareDialog(true)}>поделиться</div>
         </div>
-      </div>
-      <div css={[cont, jcSb]}>
+      </Container>
+      {burnable && <Container>
+          <p style={{color: "red"}}>Вы читаете одноразовую статью, она удалена, обновление страницы приведёт к исчезновению статьи.</p>
+        </Container>}
+      <Container css={[cont, jcSb]}>
         <p css={authorCss}>
           <a
             href={author_ ? `#` : undefined}
@@ -164,11 +186,11 @@ const NotePage: React.FC = () => {
             редактировать
           </div>
         )}
-      </div>
-      <div css={cont}>
+      </Container>
+      <Container css={cont}>
         {/* TODO: Add HTML Santizer */}
         <div dangerouslySetInnerHTML={{ __html: body }}></div>
-      </div>
+      </Container>
     </div>
   );
 };

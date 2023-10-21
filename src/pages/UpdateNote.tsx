@@ -22,7 +22,8 @@ import {
   contEdit,
   editor
 } from "../styles/globals";
-import MainHeader from "../components/header";
+import NavigationBar from "../components/Navigation";
+import Container from "../components/Container";
 
 const contentName = css`
 max-width: calc(100% - 110px);
@@ -54,17 +55,17 @@ const UpdateNotePage: React.FC = () => {
   return (
     <>
       <div css={page}>
-        <MainHeader></MainHeader>
-        <div css={[cont, jcSb]}>
+        <NavigationBar></NavigationBar>
+        <Container css={[cont, jcSb]}>
           <div css={[contentName, w100]}>
             <h1 css={articleName}>редактировании статьи {slug}</h1>
           </div>
           <div>
             <div css={btn} onClick={() => navigate(-1)}>вернуться назад</div>
           </div>
-        </div>
+        </Container>
 
-        <div css={[cont, jcSb]}>
+        <Container css={[cont, jcSb]}>
           <div css={[contentName, w100]}>
             <h2 css={articleName}>{note?.title}</h2>
             <h3 css={articleSubtitle}>{note?.subtitle}</h3>
@@ -89,9 +90,9 @@ const UpdateNotePage: React.FC = () => {
               сохранить
             </div>
           </div>
-        </div>
+        </Container>
 
-        <div css={[cont, contEdit]}>
+        <Container css={[cont, contEdit]}>
           <ReactQuill
             css={editor}
             value={val}
@@ -105,7 +106,7 @@ const UpdateNotePage: React.FC = () => {
             ref={quillRef}
             onChange={(e) => setVal(e)}
           />
-        </div>
+        </Container>
       </div>
     </>
   );

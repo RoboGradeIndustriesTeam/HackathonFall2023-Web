@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { register as apiRegister } from "../api/user";
 import useInput from "../features/useInput";
 import { page, form, cont, input, h1, h2, loginInput, regInput } from "../styles/login";
+import Input from "../components/Input";
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -38,15 +39,15 @@ const RegisterPage: React.FC = () => {
           <h1 css={h1}>регистрация</h1>
           <h2 css={h2}>зарегестрируйтесь что бы расширить функционал сервиса</h2>
         </div>
-        <input css={[cont, input]} placeholder="логин" type="text" {...login} />
-        <input
+        <Input css={[cont, input]} placeholder="логин" type="text" {...login} />
+        <Input
           css={[cont, input]}
           placeholder="пароль"
           type="password"
           {...password}
         />
-        <input css={[cont, loginInput]} type="submit" value="регистрация" />
-        <input css={[cont, regInput]} onClick={() => navigate("/login")} value="или войти" />
+        <Input css={[cont, loginInput]} type="submit" value="регистрация" />
+        <Input css={[cont, regInput]} onClick={() => navigate("/login")} value="или войти" />
       </form>
     </div>
     
