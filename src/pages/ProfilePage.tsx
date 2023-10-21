@@ -3,86 +3,19 @@ import { useAuth } from "../features/tokenContext";
 import { useNavigate, useParams } from "react-router";
 import { NoteDto, UserDto } from "../api/types";
 import { getUserNotes } from "../api/notes";
-import { css } from "@emotion/react";
 import { getUserByName } from "../api/user";
-
-const authorCss = css`
-font-size: 14px;
-margin: 0;
-`;
-const cont = css`
-border-radius: 5px; 
-background-color: #D9D9D9;
-padding: 14px 18px;
-width: 100%;
-max-width: 1000px;
-margin-bottom: 15px;
-`;
-
-const page = css`
-max-width: 100%;
-display: flex;
-flex-direction: column;
-align-items: center;
-font-family: Inter;
-`;
-
-const articleName = css`
-font-size: 24px;
-font-weight: 600;
-margin: 0;
-word-wrap: break-word
-`;
-const articleSubtitle = css`
-font-size: 14px;
-font-weight: 400;
-word-wrap: break-word;
-margin: 0;
-`;
-const logo = css`
-cursor: pointer;
-color: black;
-font-size: 14px;
-font-style: italic;
-font-weight: 500;
-word-wrap: break-word;
-margin: 0;
-transition: .3s;
-opacity: 1;
-&:hover {
-  opacity: .7;
-  color: #EE1D00;
-}
-`;
-const jcSb = css`
-display: inline-flex;
-justify-content: space-between;
-align-items: center;
-`;
-const btn = css`
-color: black;
-font-size: 12px;
-font-weight: 400;
-text-decoration: underline;
-word-wrap: break-word;
-cursor: pointer;
-transition: opacity .3s;
-opacity: 1;
-&:hover {
-    opacity: .6;
-}
-`;
-const contentName = css`
-max-width: calc(100% - 110px);
-`;
-const w100 = css`
-width: 100%;
-`;
-const contLinkdBottom = css`
-border-radius: 0;
-border-bottom-left-radius: 5px; 
-border-bottom-right-radius: 5px; 
-`;
+import {
+  articleName,
+  articleSubtitle,
+  authorCss,
+  btn,
+  cont,
+  contentName,
+  jcSb,
+  page,
+  w100,
+} from "../styles/globals";
+import MainHeader from "../components/header";
 
 const ProfilePage: React.FC = () => {
   const pars = useParams();
@@ -99,7 +32,7 @@ const ProfilePage: React.FC = () => {
           navigate("/");
         } else {
           setUser(usr);
-          setUsername(usr.username)
+          setUsername(usr.username);
           const r = await getUserNotes(usr.username);
           if ("message" in r) {
             console.log(r);
@@ -121,19 +54,9 @@ const ProfilePage: React.FC = () => {
       }
     })();
   }, [auth.is_authenticated]);
-
   return (
     <div css={page}>
-      <div css={[cont, jcSb, contLinkdBottom]}>
-        <p css={logo} onClick={() => navigate("/create")}>статейник</p>
-        {auth.is_authenticated
-          ? (
-            <div css={btn} onClick={() => navigate("/profile")}>
-              {user?.username || ""}
-            </div>
-          )
-          : <div css={btn} onClick={() => navigate("/login")}>вход</div>}
-      </div>
+      <MainHeader />
       <div css={[cont, jcSb]}>
         <div css={[contentName, w100]}>
           <h1 css={articleName}>{username}</h1>

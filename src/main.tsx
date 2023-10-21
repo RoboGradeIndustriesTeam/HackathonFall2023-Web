@@ -9,7 +9,7 @@ import { ThemeContext, darkTheme, defaultTheme } from "./features/themeing.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
-  <ThemeContext.Provider value={darkTheme}>
+  <ThemeContext.Provider value={defaultTheme}>
 
   <App />
   </ThemeContext.Provider>
