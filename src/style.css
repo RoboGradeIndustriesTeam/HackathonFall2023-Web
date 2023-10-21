@@ -5,11 +5,11 @@ body {
 }
 
 img {
-    max-height: 300px;
+    max-height: 350px;
     max-width: 100%;
 }
 
-h1, h2, h3, p, ol {
+h1, h2, h3, p, ol, ul {
     margin: 0;
 }
 

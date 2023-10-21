@@ -2,14 +2,11 @@ import React from "react";
 import { useNavigate, useParams } from "react-router";
 import { getNote } from "../api/notes";
 import { css } from "@emotion/react";
-import * as dayjs from "dayjs";
-import * as rel from "dayjs/plugin/relativeTime"; // import plugin
-import "dayjs/locale/ru";
+import moment from "moment";  
 import { QRCode } from "react-qrcode";
 import { UserDto } from "../api/types";
 import { useAuth } from "../features/tokenContext";
-dayjs.locale("ru");
-dayjs.extend(rel);
+moment.locale("ru")
 import {
   articleName,
   articleSubtitle,
@@ -155,7 +152,7 @@ const NotePage: React.FC = () => {
               }}
           >
             {author}
-          </a>&nbsp;|&nbsp;{dayjs(new Date(createdAt))
+          </a>&nbsp;|&nbsp;{moment(new Date(createdAt))
             .fromNow()}&nbsp;|&nbsp;{views} просмотров
         </p>
         {(auth.is_authenticated && auth.user?.username ||

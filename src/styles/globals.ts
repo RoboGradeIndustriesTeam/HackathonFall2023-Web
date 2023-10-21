@@ -67,8 +67,12 @@ word-wrap: break-word;
 cursor: pointer;
 transition: opacity .3s;
 opacity: 1;
+margin-right: 10px;
 &:hover {
     opacity: .6;
+}
+&:last-child {
+    margin-right: 0px;
 }
 `;
 export const articleSubtitle = css`
@@ -94,4 +98,17 @@ border-top-left-radius: 5px;
 border-top-right-radius: 5px; 
 border-bottom: 1px #939393 solid; 
 margin-bottom: 0;
+`;
+export const btnCont = css`
+color: black;
+font-size: 12px;
+font-weight: 400;
+text-decoration: underline;
+word-wrap: break-word;
+cursor: pointer;
+transition: opacity .3s;
+opacity: 1;
+&:hover {
+    opacity: .6;
+}
 `;

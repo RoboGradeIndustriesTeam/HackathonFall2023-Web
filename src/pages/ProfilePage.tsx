@@ -14,8 +14,13 @@ import {
   jcSb,
   page,
   w100,
+  btnCont,
 } from "../styles/globals";
 import MainHeader from "../components/header";
+
+const contentName = css`
+max-width: calc(100% - 90px);
+`;
 
 const ProfilePage: React.FC = () => {
   const pars = useParams();
@@ -67,7 +72,7 @@ const ProfilePage: React.FC = () => {
         </div>
       </div>
       {notes.map((i) => (
-        <div onClick={() => navigate(`/${i.slug}`)} css={[cont, btn]}>
+        <div onClick={() => navigate(`/${i.slug}`)} css={[cont, btnCont]}>
           <p css={authorCss}>{i.title}</p>
         </div>
       ))}
