@@ -134,7 +134,7 @@ const NotePage: React.FC = () => {
           />
 
           <div
-            css={btn, ml0}
+            css={[btn, ml0]}
             style={{ color: curTheme.theme.text }}
             onClick={() => {
               setTimeout(() => {
@@ -156,7 +156,7 @@ const NotePage: React.FC = () => {
           </h1>
           <QRCode css={qrCode} value={location.href.toString()}></QRCode>
           <div
-            css={btn, ml0}
+            css={[btn, ml0]}
             onClick={async () => {
               let pom = document.createElement("a");
               pom.setAttribute(
