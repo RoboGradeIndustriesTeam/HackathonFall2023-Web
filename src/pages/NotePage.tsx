@@ -12,6 +12,7 @@ import {
   articleName,
   articleSubtitle,
   authorCss,
+  brT0,
   btn,
   cont,
   contentName,
@@ -20,9 +21,9 @@ import {
   contModal,
   dialogStyle,
   jcSb,
-  page,
   mb0,
-  brT0
+  ml0,
+  page,
 } from "../styles/globals";
 import NavigationBar from "../components/Navigation";
 import { ThemeContext, THEMES } from "../features/theming";
@@ -51,6 +52,10 @@ width: 100%;
 }
 `;
 
+const hr = css`
+margin: 0;
+`;
+
 const NotePage: React.FC = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -66,7 +71,7 @@ const NotePage: React.FC = () => {
   const shareDialogRef = React.useRef<HTMLDialogElement>(null);
   const curTheme = React.useContext(ThemeContext);
   const [state, setState] = React.useState(EditorState.createEmpty());
-  const imagePlugin = createImagePlugin()
+  const imagePlugin = createImagePlugin();
   const auth = useAuth();
   React.useEffect(() => {
     if (!slug) navigate("/");
@@ -84,13 +89,15 @@ const NotePage: React.FC = () => {
           setAuthor_(note.author);
           setViews(note.views);
           setBurnable(note.burnable);
-          
+
           console.log(note.theme);
-          
+
           curTheme.setTheme((THEMES[note.theme] || THEMES.default_).theme);
 
           setState(
-            EditorState.createWithContent(convertFromRaw(JSON.parse(note.body)))
+            EditorState.createWithContent(
+              convertFromRaw(JSON.parse(note.body)),
+            ),
           );
         }
       })();
@@ -107,47 +114,49 @@ const NotePage: React.FC = () => {
 
   return (
     <div css={[page]}>
-      <dialog ref={shareDialogRef} css={dialogStyle} onClose={() => setShareDialog(false)}>
+      <dialog
+        ref={shareDialogRef}
+        css={dialogStyle}
+        onClose={() => setShareDialog(false)}
+      >
         <Container css={[cont, contModal, contLinkdTop]}>
-          <h1 css={articleName}  style={{color: curTheme.theme.text}}>Ссылка на статью</h1>
+          <h1 css={articleName} style={{ color: curTheme.theme.text }}>
+            Ссылка на статью
+          </h1>
         </Container>
 
-        <Container css={[cont, contModal, mb0 ]}>
+        <Container css={[cont, contModal, mb0]}>
           <input
             css={linkI}
             placeholder={""}
             value={location.toString()}
             readOnly
           />
-        </Container>
-        <Container css={[cont, contModal, mb0]}>
+
           <div
-            css={btn}
-            style={{color: curTheme.theme.text}}
+            css={btn, ml0}
+            style={{ color: curTheme.theme.text }}
             onClick={() => {
               setTimeout(() => {
-                try { 
+                try {
                   navigator.clipboard.writeText(location.href.toString());
-
+                } catch (E) {
+                  alert("Не удалось скопировать.");
                 }
-                catch (E) {
-                  alert("Не удалось скопировать.")
-                }
-
-              }, 100)
+              }, 100);
             }}
           >
             Скопировать ссылку
           </div>
         </Container>
-        <hr />
+        <hr css={hr} />
         <Container css={[cont, contModal, mb0]}>
-          <h1 css={h5}  style={{color: curTheme.theme.text}}>QR-код на статью</h1>
+          <h1 css={h5} style={{ color: curTheme.theme.text }}>
+            QR-код на статью
+          </h1>
           <QRCode css={qrCode} value={location.href.toString()}></QRCode>
-        </Container>
-        <Container css={[cont, contModal, mb0 ]}>
           <div
-            css={btn}
+            css={btn, ml0}
             onClick={async () => {
               let pom = document.createElement("a");
               pom.setAttribute(
@@ -160,14 +169,20 @@ const NotePage: React.FC = () => {
               pom.click();
               document.body.removeChild(pom);
             }}
-            style={{color: curTheme.theme.text}}
+            style={{ color: curTheme.theme.text }}
           >
             Скачать QR-код
           </div>
         </Container>
-        <hr />
+        <hr css={hr} />
         <Container css={[cont, contModal, brT0]}>
-          <div css={btn} onClick={() => setShareDialog(false)}  style={{color: curTheme.theme.text}}>Закрыть</div>
+          <div
+            css={[btn, ml0]}
+            onClick={() => setShareDialog(false)}
+            style={{ color: curTheme.theme.text }}
+          >
+            Закрыть
+          </div>
         </Container>
       </dialog>
 
@@ -178,13 +193,20 @@ const NotePage: React.FC = () => {
           <h2 css={articleSubtitle}>{subtitle}</h2>
         </div>
         <div>
-          <div css={btn} onClick={() => setShareDialog(true)} style={{color: curTheme.theme.text}}>Поделиться</div>
+          <div
+            css={btn}
+            onClick={() => setShareDialog(true)}
+            style={{ color: curTheme.theme.text }}
+          >
+            Поделиться
+          </div>
         </div>
       </Container>
       {burnable !== -1 && (
         <Container>
           <p style={{ color: "red" }}>
-            Вы читаете не бесконечную статью, после истечения количества просмотров статья будет удалена
+            Вы читаете не бесконечную статью, после истечения количества
+            просмотров статья будет удалена
           </p>
         </Container>
       )}
@@ -220,12 +242,14 @@ const NotePage: React.FC = () => {
       <Container css={cont}>
         {/* TODO: Add HTML Santizer */}
         <div dangerouslySetInnerHTML={{ __html: body }}></div>
-        {/* <Editor
+        {
+          /* <Editor
           // plugins={[imagePlugin]}
           onChange={() => {}}
           editorState={state}
           readOnly={true}
-        /> */}
+        /> */
+        }
       </Container>
     </div>
   );
