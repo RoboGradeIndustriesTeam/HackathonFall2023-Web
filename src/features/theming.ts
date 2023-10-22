@@ -16,9 +16,9 @@ export const THEMES: Record<string, {name: string, theme: ITheme}> = {
     "default": {
         name: "Светлая",
         theme: {
-            background: "#fff",
+            background: "#f3f3f3",
             text: "#000",
-            containers: "#D9D9D9",
+            containers: "#FFFFFF",
             input: "#000"
         }
     },
@@ -27,7 +27,7 @@ export const THEMES: Record<string, {name: string, theme: ITheme}> = {
         theme: {
             background: "#303030",
             text: "#fff",
-            containers: "#000000",
+            containers: "#232323",
             input: "#fff"
         }
     },

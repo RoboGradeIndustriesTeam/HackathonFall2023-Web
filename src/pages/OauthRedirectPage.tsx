@@ -10,7 +10,7 @@ const OauthRedirectPage: React.FC = () => {
         auth.setAccessToken(sp.get("code") || "").then(() => navigate("/"))
     }
     
-    return <h1>Загрука.</h1>
+    return <h1>Загрука...</h1>
 }
 
 export default OauthRedirectPage;

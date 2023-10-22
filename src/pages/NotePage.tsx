@@ -25,6 +25,8 @@ import {
 import NavigationBar from "../components/Navigation";
 import { ThemeContext, THEMES } from "../features/theming";
 import Container from "../components/Container";
+import { convertFromRaw, Editor, EditorState } from "draft-js";
+import createImagePlugin from "@draft-js-plugins/image";
 
 const h5 = css`
 font-size: 16px;
@@ -58,10 +60,11 @@ const NotePage: React.FC = () => {
   const [createdAt, setCreatedAt] = React.useState(Date.now());
   const [views, setViews] = React.useState<number>(0);
   const [shareDialog, setShareDialog] = React.useState<boolean>(false);
-  const [burnable, setBurnable] = React.useState<boolean>(false);
+  const [burnable, setBurnable] = React.useState<number>(-1);
   const shareDialogRef = React.useRef<HTMLDialogElement>(null);
   const curTheme = React.useContext(ThemeContext);
-
+  const [state, setState] = React.useState(EditorState.createEmpty());
+  const imagePlugin = createImagePlugin()
   const auth = useAuth();
   React.useEffect(() => {
     if (!slug) navigate("/");
@@ -78,8 +81,15 @@ const NotePage: React.FC = () => {
           setCreatedAt(note.createdAt);
           setAuthor_(note.author);
           setViews(note.views);
-          setBurnable(note.burnable)
+          setBurnable(note.burnable);
+          
+          console.log(note.theme);
+          
           curTheme.setTheme((THEMES[note.theme] || THEMES.default_).theme);
+
+          setState(
+            EditorState.createWithContent(convertFromRaw(JSON.parse(note.body)))
+          );
         }
       })();
     }
@@ -95,12 +105,11 @@ const NotePage: React.FC = () => {
 
   return (
     <div css={[page]}>
-      <dialog ref={shareDialogRef} css={dialogStyle}>
+      <dialog ref={shareDialogRef} css={dialogStyle} onClose={() => setShareDialog(false)}>
         <Container css={[cont, contModal]}>
-          <h1 css={articleName}>ссылка на статью</h1>
-          <h2 css={articleSubtitle}>можете поделиться ей</h2>
+          <h1 css={articleName}  style={{color: curTheme.theme.text}}>Ссылка на статью</h1>
         </Container>
-        
+
         <Container css={[cont, contModal, contLinkdTop]}>
           <input
             css={linkI}
@@ -112,15 +121,25 @@ const NotePage: React.FC = () => {
         <Container css={[cont, contModal, contLinkdBottom]}>
           <div
             css={btn}
+            style={{color: curTheme.theme.text}}
             onClick={() => {
-              navigator.clipboard.writeText(location.href.toString());
+              setTimeout(() => {
+                try { 
+                  navigator.clipboard.writeText(location.href.toString());
+
+                }
+                catch (E) {
+                  alert("Не удалось скопировать.")
+                }
+
+              }, 100)
             }}
           >
-            скопировать
+            Скопировать ссылку
           </div>
         </Container>
         <Container css={[cont, contModal, contLinkdTop]}>
-          <h1 css={h5}>qr-код на статью</h1>
+          <h1 css={h5}  style={{color: curTheme.theme.text}}>QR-код на статью</h1>
           <QRCode css={qrCode} value={location.href.toString()}></QRCode>
         </Container>
         <Container css={[cont, contModal, contLinkdBottom]}>
@@ -138,12 +157,13 @@ const NotePage: React.FC = () => {
               pom.click();
               document.body.removeChild(pom);
             }}
+            style={{color: curTheme.theme.text}}
           >
-            скачать
+            Скачать QR-код
           </div>
         </Container>
         <Container css={[cont, contModal]}>
-          <div css={btn} onClick={() => setShareDialog(false)}>закрыть</div>
+          <div css={btn} onClick={() => setShareDialog(false)}  style={{color: curTheme.theme.text}}>Закрыть</div>
         </Container>
       </dialog>
 
@@ -154,12 +174,16 @@ const NotePage: React.FC = () => {
           <h2 css={articleSubtitle}>{subtitle}</h2>
         </div>
         <div>
-          <div css={btn} onClick={() => setShareDialog(true)}>поделиться</div>
+          <div css={btn} onClick={() => setShareDialog(true)} style={{color: curTheme.theme.text}}>Поделиться</div>
         </div>
       </Container>
-      {burnable && <Container>
-          <p style={{color: "red"}}>Вы читаете одноразовую статью, она удалена, обновление страницы приведёт к исчезновению статьи.</p>
-        </Container>}
+      {burnable !== -1 && (
+        <Container>
+          <p style={{ color: "red" }}>
+            Вы читаете не бесконечную статью, после истечения количества просмотров статья будет удалена
+          </p>
+        </Container>
+      )}
       <Container css={[cont, jcSb]}>
         <p css={authorCss}>
           <a
@@ -173,11 +197,12 @@ const NotePage: React.FC = () => {
                 e.preventDefault();
               }}
           >
-            {author}
+            {author_?.displayName || author}
           </a>&nbsp;|&nbsp;{moment(new Date(createdAt))
             .fromNow()}&nbsp;|&nbsp;{views} просмотров
         </p>
-        {(auth.is_authenticated && auth.user?.username ||
+        {
+          /* {(auth.is_authenticated && auth.user?.username ||
           "" === author_?.username) && (
           <div
             css={btn}
@@ -185,11 +210,18 @@ const NotePage: React.FC = () => {
           >
             редактировать
           </div>
-        )}
+        )} */
+        }
       </Container>
       <Container css={cont}>
         {/* TODO: Add HTML Santizer */}
         <div dangerouslySetInnerHTML={{ __html: body }}></div>
+        {/* <Editor
+          // plugins={[imagePlugin]}
+          onChange={() => {}}
+          editorState={state}
+          readOnly={true}
+        /> */}
       </Container>
     </div>
   );

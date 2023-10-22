@@ -28,7 +28,7 @@ const router = createBrowserRouter([
     path: "/register",
     element: <RegisterPage></RegisterPage>,
   },
-  {
+  { 
     path: "/profile",
     element: <ProfilePage></ProfilePage>,
   },
@@ -40,11 +40,10 @@ const router = createBrowserRouter([
     path: "/create",
     element: <CreateNotePage></CreateNotePage>,
   },
-  {
-    path: "/edit/:slug",
-    element: <UpdateNotePage></UpdateNotePage>,
-  },
-
+  //{
+  //   path: "/edit/:slug",
+  //   element: <UpdateNotePage></UpdateNotePage>,
+  // },
   {
     path: "/error",
     element: <ErrorPage></ErrorPage>,

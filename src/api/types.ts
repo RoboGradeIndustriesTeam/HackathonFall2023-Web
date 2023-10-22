@@ -21,6 +21,8 @@ export interface UserDto {
   _id: string;
   username: string;
   password: string;
+  roles: string[];
+  displayName: string;
 }
 
 export interface ApiError {
@@ -39,7 +41,7 @@ export interface CreateNoteDto {
 
 export interface CreateAnonymousNoteDto extends CreateNoteDto {
  authorName: string;
- burnable: boolean;
+ burnable: number;
  theme: string;
 
 }
@@ -54,6 +56,6 @@ export interface NoteDto {
   subtitle: string;
   createdAt: number;
   views: number;
-  burnable: boolean;
+  burnable: -1;
   theme: string;
 }

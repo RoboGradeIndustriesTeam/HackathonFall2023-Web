@@ -3,7 +3,7 @@ import { useAuth } from "../features/tokenContext";
 import { useNavigate } from "react-router";
 import { register as apiRegister } from "../api/user";
 import useInput from "../features/useInput";
-import { page, form, cont, input, h1, h2, loginInput, regInput } from "../styles/login";
+import { logo, page, form, cont, input, h1, h2, loginInput, regInput } from "../styles/login";
 import Input from "../components/Input";
 
 const RegisterPage: React.FC = () => {
@@ -35,19 +35,26 @@ const RegisterPage: React.FC = () => {
   return (
     <div css={[page]}>
       <form css={form} onSubmit={onSubmit}>
-        <div css={cont}>
-          <h1 css={h1}>регистрация</h1>
-          <h2 css={h2}>зарегестрируйтесь что бы расширить функционал сервиса</h2>
+        <div>
+          <h1 css={logo} onClick={
+            ()=>{
+              navigate('/')
+            }
+          }>статейник</h1>
         </div>
-        <Input css={[cont, input]} placeholder="логин" type="text" {...login} />
+        <div>
+          <h1 css={h1}>Регистрация</h1>
+        </div>
+        <Input css={[cont, input]} placeholder="Введите логин" type="text" {...login} />
         <Input
           css={[cont, input]}
-          placeholder="пароль"
+          placeholder="Введите пароль"
           type="password"
           {...password}
         />
-        <Input css={[cont, loginInput]} type="submit" value="регистрация" />
-        <Input css={[cont, regInput]} onClick={() => navigate("/login")} value="или войти" />
+             <div css={[regInput]} onClick={() => navigate("/login")}>Или войдите</div>
+        <input css={[loginInput]} type="submit" value="Регистрация" />
+   
       </form>
     </div>
     

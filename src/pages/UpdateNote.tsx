@@ -61,7 +61,7 @@ const UpdateNotePage: React.FC = () => {
             <h1 css={articleName}>редактировании статьи {slug}</h1>
           </div>
           <div>
-            <div css={btn} onClick={() => navigate(-1)}>вернуться назад</div>
+            <div css={btn} onClick={() => navigate(-1)}>Назад</div>
           </div>
         </Container>
 
@@ -87,7 +87,7 @@ const UpdateNotePage: React.FC = () => {
                 }
               }}
             >
-              сохранить
+              Сохранить
             </div>
           </div>
         </Container>

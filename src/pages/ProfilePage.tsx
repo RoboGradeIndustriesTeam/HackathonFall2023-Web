@@ -21,7 +21,7 @@ import moment from "moment";
 import Container from "../components/Container";
 
 const contentName = css`
-max-width: calc(100% - 110px);
+max-width: calc(100% - 135px);
 `;
 
 const ProfilePage: React.FC = () => {
@@ -66,17 +66,17 @@ const ProfilePage: React.FC = () => {
       <NavigationBar />
       <Container css={[cont, jcSb]}>
         <div css={[contentName, w100]}>
-          <h1 css={articleName}>{username}</h1>
-          <h2 css={articleSubtitle}>статьи автора</h2>
+          <h1 css={articleName}>{user?.displayName}</h1>
+          <h2 css={articleSubtitle}>Статьи автора</h2>
         </div>
         <div>
-          <div css={btn} onClick={() => navigate(-1)}>вернуться назад</div>
+          <div css={btn} onClick={() => navigate(-1)}>Назад</div>
         </div>
       </Container>
       {notes.map((i) => (
         <Container onClick={() => navigate(`/${i.slug}`)} css={[cont, btnCont]}>
           <p css={authorCss}>
-            {i.title} | {i.views} просмотров | {moment(i.createdAt).fromNow()}
+            {i.title} | {i.views} Просмотров | {moment(i.createdAt).fromNow()}
           </p>
         </Container>
       ))}
