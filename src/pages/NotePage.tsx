@@ -21,6 +21,8 @@ import {
   dialogStyle,
   jcSb,
   page,
+  mb0,
+  brT0
 } from "../styles/globals";
 import NavigationBar from "../components/Navigation";
 import { ThemeContext, THEMES } from "../features/theming";
@@ -106,11 +108,11 @@ const NotePage: React.FC = () => {
   return (
     <div css={[page]}>
       <dialog ref={shareDialogRef} css={dialogStyle} onClose={() => setShareDialog(false)}>
-        <Container css={[cont, contModal]}>
+        <Container css={[cont, contModal, contLinkdTop]}>
           <h1 css={articleName}  style={{color: curTheme.theme.text}}>Ссылка на статью</h1>
         </Container>
 
-        <Container css={[cont, contModal, contLinkdTop]}>
+        <Container css={[cont, contModal, mb0 ]}>
           <input
             css={linkI}
             placeholder={""}
@@ -118,7 +120,7 @@ const NotePage: React.FC = () => {
             readOnly
           />
         </Container>
-        <Container css={[cont, contModal, contLinkdBottom]}>
+        <Container css={[cont, contModal, mb0]}>
           <div
             css={btn}
             style={{color: curTheme.theme.text}}
@@ -138,11 +140,12 @@ const NotePage: React.FC = () => {
             Скопировать ссылку
           </div>
         </Container>
-        <Container css={[cont, contModal, contLinkdTop]}>
+        <hr />
+        <Container css={[cont, contModal, mb0]}>
           <h1 css={h5}  style={{color: curTheme.theme.text}}>QR-код на статью</h1>
           <QRCode css={qrCode} value={location.href.toString()}></QRCode>
         </Container>
-        <Container css={[cont, contModal, contLinkdBottom]}>
+        <Container css={[cont, contModal, mb0 ]}>
           <div
             css={btn}
             onClick={async () => {
@@ -162,7 +165,8 @@ const NotePage: React.FC = () => {
             Скачать QR-код
           </div>
         </Container>
-        <Container css={[cont, contModal]}>
+        <hr />
+        <Container css={[cont, contModal, brT0]}>
           <div css={btn} onClick={() => setShareDialog(false)}  style={{color: curTheme.theme.text}}>Закрыть</div>
         </Container>
       </dialog>

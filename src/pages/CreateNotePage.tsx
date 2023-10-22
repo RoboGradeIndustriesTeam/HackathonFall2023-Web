@@ -7,6 +7,8 @@ import { useAuth } from "../features/tokenContext";
 import { css } from "@emotion/react";
 import draftToHtml from "draftjs-to-html";
 import { stateToHTML } from "draft-js-export-html";
+
+import Immutable from "immutable";
 import {
   btn,
   check,
@@ -28,7 +30,15 @@ import Input from "../components/Input";
 import Editor from "@draft-js-plugins/editor";
 import createImagePlugin from "@draft-js-plugins/image";
 import htmltodraft from "html-to-draftjs";
-import { convertFromRaw, convertToRaw } from "draft-js";
+import {
+  BlockMapBuilder,
+  CharacterMetadata,
+  ContentBlock,
+  convertFromRaw,
+  convertToRaw,
+  Entity,
+  genKey,
+} from "draft-js";
 import {
   AtomicBlockUtils,
   ContentState,
@@ -138,6 +148,9 @@ display: flex;
 margin-bottom: 15px;
 `;
 
+const labelEter = css`
+`;
+
 const CreateNotePage: React.FC = () => {
   const auth = useAuth();
 
@@ -212,15 +225,89 @@ const CreateNotePage: React.FC = () => {
             imagePlugin.addImage(editorState, fileDownloadUrl, {}),
           );
         } else {
-        
-          // const blocksFromHtml = htmltodraft(`<a href='#' target='_blank'>test</a>`);
-          // const { contentBlocks, entityMap } = blocksFromHtml;
-          // const contentState = ContentState.createFromBlockArray(
-          //   contentBlocks,
-          //   entityMap,
+          const selection = editorState.getSelection();
+          const contentState = editorState.getCurrentContent();
+          const contentStateWithEntity = contentState.createEntity(
+            "LINK",
+            "MUTABLE",
+            { url: "https://google.com" },
+          );
+          const entityKey = contentStateWithEntity
+            .getLastCreatedEntityKey();
+          // const newEditorState = EditorState.set(editorState, {
+          //   currentContent: contentStateWithEntity,
+          // });
+          /*
+
+           */
+          // const newBlockKey = genKey();
+          // let blocks = contentState.getBlockMap();
+          // blocks.set(newBlockKey, new ContentBlock({
+          //   key: newBlockKey,
+          //   type: "unstyled",
+
+          // }))
+          // const newBlockMap = blocks;
+          // const newContentState = contentState.merge({
+          //   blockMap: newBlockMap,
+          //   selectionBefore: selection,
+          //   selectionAfter: selection,
+          // });
+          // setEditorState(
+          //   EditorState.push(
+          //     editorState,
+          //     // @ts-ignore
+          //     newContentState,
+          //     "insert-fragment",
+          //   ),
           // );
-          // const editorState = EditorState.createWithContent(contentState);
-          // setEditorState(editorState)
+          // Get the current content state of the editor
+          const currentContentState = editorState.getCurrentContent();
+
+          // Create a new ContentBlock
+          const newBlockKey = genKey();
+          const ent = Entity.create("LINK", "MUTABLE", { url: "test.com" });
+          const newBlock = new ContentBlock({
+            key: newBlockKey,
+            text: file.name + "(файл был загружен, фронтэнд не готов, url файла: '" + fileDownloadUrl + "')",
+            type: "unstyled",
+           
+          });
+
+          // Get the current selection state of the editor
+          const currentSelectionState = editorState.getSelection();
+
+          // Get the current block key of the last block in the editor
+          const lastBlockKey = currentContentState.getLastBlock().getKey();
+
+          // Create a new ContentState and add the new ContentBlock to the end of the block map
+          const newContentState = ContentState.createFromBlockArray(
+            currentContentState.getBlockMap().set(newBlockKey, newBlock)
+              .toArray(),
+          );
+
+          // Update the editor's content state with the new ContentState
+          const newEditorState = EditorState.push(
+            editorState,
+            newContentState,
+            "insert-fragment",
+          );
+
+          // Set the selection state to the end of the new block
+          const newSelectionState = currentSelectionState.merge({
+            anchorKey: newBlockKey,
+            anchorOffset: newBlock.getLength(),
+            focusKey: newBlockKey,
+            focusOffset: newBlock.getLength(),
+            isBackward: false,
+          });
+
+          // Update the editor's selection state with the new SelectionState
+          const finalEditorState = EditorState.forceSelection(
+            newEditorState,
+            newSelectionState,
+          );
+          setEditorState(finalEditorState);
         }
       } catch (error) {
         console.error("Error uploading file:", error);
@@ -433,7 +520,7 @@ const CreateNotePage: React.FC = () => {
                 )}
             /> */
             }
-            <label htmlFor="foreverCheck">
+            <label css={labelEter} htmlFor="foreverCheck">
               Вечная статья
             </label>
 
@@ -444,22 +531,27 @@ const CreateNotePage: React.FC = () => {
               onChange={(e) => setForever(e.target.checked)}
             />
             {!isForever && (
-              <input
-                type="number"
-                id="burnableCheck"
-                value={burnable}
-                disabled={!anonymous}
-                style={{
-                  color: themeC.theme.text,
-                  background: themeC.theme.background,
-                  border: "none",
-                  borderRadius: 5,
-                }}
-                onChange={(e) =>
-                  setBurnable(
-                    (+e.target.value < 1) ? 1 : +e.target.value
-                  )}
-              />
+              <div>
+                <input
+                  type="number"
+                  id="burnableCheck"
+                  value={burnable}
+                  disabled={!anonymous}
+                  style={{
+                    color: themeC.theme.text,
+                    background: themeC.theme.background,
+                    border: "none",
+                    borderRadius: 5,
+                  }}
+                  onChange={(e) =>
+                    setBurnable(
+                      (+e.target.value < 1) ? 1 : +e.target.value,
+                    )}
+                />{" "}
+                <label htmlFor="burnableCheck">
+                  просмотров до удаления
+                </label>
+              </div>
             )}
             {
               /* <span style={{ fontSize: "0.8rem" }}>

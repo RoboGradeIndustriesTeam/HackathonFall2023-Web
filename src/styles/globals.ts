@@ -191,3 +191,13 @@ background-color:black;
 color:white;
 }
 `;
+
+export const mb0 = css`
+margin-bottom: 0;
+border-radius: 0;
+`
+
+export const brT0 = css`
+border-top-left-radius: 0;
+border-top-right-radius: 0;
+`
