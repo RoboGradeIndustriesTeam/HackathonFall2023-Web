@@ -78,7 +78,7 @@ const LoginPage: React.FC = () => {
         <div css={[regInput]} onClick={() => navigate("/register")}>
           или зарегестрируйтесь
         </div>
-        <div css={socPanel}></div>
+        <div css={socPanel}>
           <button
             css={[loginSocial]}
             onClick={() => {
